@@ -3,6 +3,7 @@ import sys
 import numpy as np
 import dlib
 import cv2 
+from helper import *
 # from PIL import Image, ImageDraw, ImageFont 
 
 FACE_POINTS         = list(range(17, 68))
@@ -14,37 +15,12 @@ LEFT_EYE_POINTS     = list(range(42, 48))
 NOSE_POINTS         = list(range(27, 35))
 JAW_POINTS          = list(range(0, 17))
 
-def abs_slope(x1, y1, x2, y2):
-	return (abs(y1 - y2)*1.0) / (abs(x1 - x2)*1.0)
-
-def rect_to_bb(rect):
-	x = rect.left()
-	y = rect.top()
-	w = rect.right() - x 
-	h = rect.bottom() - y 
-	return (x, y, w, h)
 
 def shape_to_np(shape, dtype="int"):
 	coords = np.zeros((68, 2), dtype=dtype)
 	for i in range(0, 68):
 		coords[i] = (shape.part(i).x, shape.part(i).y)
 	return coords
-
-def resize(image, width=1200):
-	r = width * 1.0 / image.shape[1]
-	dim = (width, int(image.shape[0] * r)) 
-	resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
-	return resized
-
-def get_center(arr_x, arr_y):
-	x = 0
-	y = 0
-	for i in range(0, len(arr_x)):
-		x = x + arr_x[i]
-		y = y + arr_y[i]
-	x = x / len(arr_x)
-	y = y / len(arr_y)
-	return [x, y]
 
 if len(sys.argv) < 3:
 	print "Usage: %s <image file>" % sys.argv[0]
@@ -56,7 +32,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 image = cv2.imread(image_file,cv2.IMREAD_COLOR)
-image = resize(image, width=1200)
+image = resize_width(image, width=1200)
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 rects = detector(gray, 1)
 
