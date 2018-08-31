@@ -1,15 +1,20 @@
+# -*- coding: utf-8 -*- 
+
 import cv2 
 
 def abs_slope(x1, y1, x2, y2):
+	#斜率的绝对值
 	return (abs(y1 - y2)*1.0) / (abs(x1 - x2)*1.0)
 
 def resize_width(image, width=1200):
+	#缩放到指定宽度
 	r = width * 1.0 / image.shape[1]
 	dim = (width, int(image.shape[0] * r)) 
 	resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
 	return resized
 
 def rect_to_bb(rect):
+	#人脸上下左右框
 	x = rect.left()
 	y = rect.top()
 	w = rect.right() - x 
@@ -17,6 +22,7 @@ def rect_to_bb(rect):
 	return (x, y, w, h)
 
 def get_center(arr_x, arr_y):
+	#中心点
 	x = 0
 	y = 0
 	for i in range(0, len(arr_x)):
